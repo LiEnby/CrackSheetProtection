@@ -1,6 +1,6 @@
 # 🏳️‍🌈 Opinionated Queer License v1.1
 
-© Copyright {Licensor}
+© Copyright Li - The Crystal System
 
 ## Permissions
 
