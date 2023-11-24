@@ -1,8 +1,17 @@
+import random
 import sys
 import itertools
 import struct
 import string
 import olefile
+
+allchars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ "
+
+def rand_pass():
+    s = ""
+    for i in range(random.randint(0,100)):
+        s += random.choice(allchars)
+    return s
 
 def excel_hash(password):
     result = 0
@@ -20,19 +29,20 @@ def excel_hash(password):
     return result
 
 def crack_password(targetHash):
-    for combLen in range(0, 6):
-      for combination in itertools.product(string.printable, repeat=combLen):
-        attempt = ''.join(combination)
+    gotHash = 0x00
+    while gotHash != targetHash:
+        attempt = rand_pass()
         gotHash = excel_hash(attempt)
-        if gotHash == targetHash:
-            return attempt
+        print("Cracking: "+hex(targetHash)+": "+hex(gotHash), end="\r")
+    return attempt
+
 
 def extract_sheet_hashes(stream):
     hashes = []
     while True:
         pos = stream.tell()
         if pos >= stream.size:
-            break  # eof            
+            break            
         try:
             type = struct.unpack("<H", stream.read(2))[0]
             length = struct.unpack("<H", stream.read(2))[0]
@@ -53,7 +63,8 @@ def read_xls(filename):
             for hash in hashes:
                 if hash == 0:
                     continue
-                print("FOUND PASSWORD: "+crack_password(hash))
+                passwd = crack_password(hash)
+                print("hash: "+hex(hash)+" : " +passwd)
  
         stream.close()
     ole.close()
