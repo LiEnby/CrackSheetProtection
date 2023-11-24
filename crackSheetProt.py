@@ -9,7 +9,7 @@ allchars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%
 
 def rand_pass():
     s = ""
-    for i in range(random.randint(0,100)):
+    for i in range(random.randint(0,20)):
         s += random.choice(allchars)
     return s
 
